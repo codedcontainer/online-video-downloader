@@ -1,5 +1,11 @@
 const { spawn } = require('child_process');
 
+/**
+ * 
+ * @param {String} inputVideo 
+ * @param {String} subtitle 
+ * @param {String} outputName 
+ */
 const addSubtitles = (inputVideo, subtitle, outputName) => {
     const ffmpeg = spawn('ffmpeg', ['-i', `${inputVideo}`, "-vf", `subtitles=${subtitle}`, `${outputName}`]);
     ffmpeg.on('exit', (code) => {
@@ -13,6 +19,6 @@ const addSubtitles = (inputVideo, subtitle, outputName) => {
 }
 
 it('should add subtitles to a video file', () => {
-    
+        addSubtitles()
 
 });
