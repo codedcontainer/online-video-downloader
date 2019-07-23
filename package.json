@@ -4,14 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/youtube-dl.js"
+    "test": "mocha test/subtitle-download.js"
   },
   "author": "Jason Utt",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
+    "http": "0.0.0",
+    "https": "^1.0.0",
     "youtube-dl": "^2.0.0"
   },
   "devDependencies": {
-    "mocha": "^6.1.4"
+    "mocha": "^6.1.4",
+    "unzipper": "^0.10.1"
   }
 }
