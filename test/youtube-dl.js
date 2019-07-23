@@ -1,8 +1,9 @@
 const assert = require('assert'); 
 var youtubedl = require('youtube-dl');
 var fs = require('fs');
-const url = "https://www.youtube.com/watch?v=NiOcrA_HenE"; 
-
+const path = require('path');
+const url = "https://www.youtube.com/watch?v=OMOGaugKpzs"; 
+const docDir = path.resolve(__dirname, "../", "doc"); 
 describe('youtube-dl',()=>{
     it('should return the video formats available', ()=>{
         youtubedl.getInfo(url,(err,info)=>{
@@ -22,12 +23,13 @@ describe('youtube-dl',()=>{
             }).filter((value, index, array)=>{
                 return value !== null; 
             });
-            //console.log(videoFormats);
+           console.log(videoFormats);
         });
     }); 
     it ('should download a youtube video', (done)=>{
-        var video = youtubedl(url, ['--format=136'], {start: downloaded});
-        video.pipe(fs.createWriteStream('video.mp4'));
+        var downloaded = 0 ;
+        var video = youtubedl(url, ['--format=396'], {start: downloaded});
+        video.pipe(fs.createWriteStream(docDir+'/video.mp4'));
 
         video.on('info', function(info){
            // var total = info.size + downloaded; 

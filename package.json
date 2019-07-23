@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/subtitle-download.js"
+    "test": "mocha test/youtube-dl.js --timeout 10000000"
   },
   "author": "Jason Utt",
   "license": "ISC",
