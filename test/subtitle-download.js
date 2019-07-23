@@ -23,7 +23,7 @@ describe('download subtitle file', ()=>{
        });
     }); 
     it('should rename the subitle file',(done)=>{
-        const newFileName = "The100_S06E06_name.srt"; 
+        const newFileName = "sub.srt"; 
         fs.readdir(docDir+'/sub', (err, files)=>{
             const fileName = files[0]; 
 

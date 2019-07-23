@@ -23,12 +23,12 @@ describe('youtube-dl',()=>{
             }).filter((value, index, array)=>{
                 return value !== null; 
             });
-           console.log(videoFormats);
+           //console.log(videoFormats);
         });
     }); 
     it ('should download a youtube video', (done)=>{
         var downloaded = 0 ;
-        var video = youtubedl(url, ['--format=396'], {start: downloaded});
+        var video = youtubedl(url, ['--format=134'], {start: downloaded});
         video.pipe(fs.createWriteStream(docDir+'/video.mp4'));
 
         video.on('info', function(info){
