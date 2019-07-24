@@ -11,8 +11,7 @@ export class FileSize{
         //convert the number to a stirng and determine the number of characters
         //take the number of characters and subtract by 1 get number of 0's
         const fileSizeStr = fileSize.toString();
-        const numZeros = fileSizeStr.length - 1; 
-        
+        const numZeros = fileSizeStr.length - 1;
         if (numZeros % 3 == 0){
            let byteDef:Array<any> = this.byteDefArray[(numZeros / 3 ) - 1];
           let newValue = fileSize / byteDef[2]; 
@@ -33,3 +32,5 @@ export class FileSize{
         }
     }
 }
+const aSize = FileSize.convertFileSize(1430875);
+console.log(typeof aSize); 

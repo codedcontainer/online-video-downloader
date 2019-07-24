@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> </script>
+    <script src="js/index.js"></script>
 </head>
 <body>
     <form action="/" method="post">
@@ -16,19 +18,15 @@
             <label for="subUrl">Subtitle URL</label>
             <input type="text" name="subUrl" id="subUrl" value="https://subscene.com/subtitles/english-text/lj7lv2Vu_LH_jx5wAgumHpq0mAzG9ULzjJEffnEqz88MbspY8ShXC2yl-X9zNxcVJk5B4k8FcJpPjDw_jRhhMobDdfTszNoVsgLy_rLDvGyT5Ig-R0vD3BzpJpbFLNk90">
         </fieldset>
-        <fieldset>
-            <label for="vidFormat">Video Resolution</label>
-            <select name="vidFormat" id="vidFormat">
-                <option value="142">1920x1080 - mp4</option>
-                <option value="143">1080x720 - mp4</option>
-            </select>
+        <fieldset id="resolution">
+          
         </fieldset>
         <fieldset>
             <label for="subBrun">Burn Subtitles?</label>
             <input type="checkbox" name="subBurn" id="subBurn" value="burn">
     </fieldset>
         <fieldset>
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit" id="submit">
         </fieldset>
     </form>
 </body>

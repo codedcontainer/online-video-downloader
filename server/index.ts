@@ -16,11 +16,8 @@ app.post('/',(req, res)=>{
     
     var video = new Video(vidUrl); 
     video.getFormats((formats)=>{
-        console.log(formats);
+        res.send(formats);
     });
-
-
-    res.redirect('/');
 });
 
 app.listen(port, ()=>{

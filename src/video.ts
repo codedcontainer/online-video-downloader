@@ -1,6 +1,6 @@
 const youtubedl = require('youtube-dl'); 
 import {FileSize} from '../src/FileSize';
-import * as path from 'path'; 
+import * as async from 'async';
 import * as fs from 'fs'; 
 
 interface format{
@@ -14,23 +14,27 @@ export class Video{
     constructor(url){
         this.url = url; 
     }
-    public getFormats(callback){
+    public getFormats(callbacka){
         youtubedl.getInfo(this.url, (err, info)=>{
             //console.log(info);
             if (err) throw err; 
-            let videoFormats = info.formats.map((value)=>{
-                console.log(FileSize.convertFileSize(value.filesize)); 
-
-
-                return {
-                    format: value.format,
-                    formatId: value.format_id,
-                    filesize: value.filesize,
-                    ext: value.ext
-                }
+            var vidFormats = []; 
+            async.each(info.formats, (value:any, callback)=>{            
+                    vidFormats.push({
+                        format: value.format,
+                        formatId: value.format_id,
+                        filesize: FileSize.convertFileSize(value.filesize),
+                        ext: value.ext
+                    });
+                    callback();
+                   
+                });
+                
+                if (vidFormats.length == info.formats.length){
+                    callbacka(vidFormats); 
+                } 
             });
-            callback(videoFormats);
-        })
+
     }
     public download(formatCode, outputName){
         var video = youtubedl(this.url, [`--format=${formatCode}`],{cwd: __dirname}); 
