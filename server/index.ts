@@ -1,4 +1,6 @@
 import * as express from 'express'; 
+import {Video} from '../src/Video';
+import { format } from 'path';
 const app = express(); 
 const port = 3000; 
 
@@ -9,7 +11,16 @@ app.get('/', (req, res)=> {
     res.send("New server is working"); 
 });
 app.post('/',(req, res)=>{
-    console.log(req.body);
+    const {vidUrl, subUrl, vidFormat, subBurn} = req.body; 
+    console.log(vidUrl);
+    
+    var video = new Video(vidUrl); 
+    video.getFormats((formats)=>{
+        console.log(formats);
+    });
+
+
+    res.redirect('/');
 });
 
 app.listen(port, ()=>{

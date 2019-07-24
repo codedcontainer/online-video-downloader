@@ -1,4 +1,5 @@
-import * as youtubedl from 'youtube-dl'; 
+const youtubedl = require('youtube-dl'); 
+import {FileSize} from '../src/FileSize';
 import * as path from 'path'; 
 import * as fs from 'fs'; 
 
@@ -8,25 +9,30 @@ interface format{
     ext: string
 }
 
-class Video{
+export class Video{
     url:string;
     constructor(url){
         this.url = url; 
     }
-    private getFormats(){
+    public getFormats(callback){
         youtubedl.getInfo(this.url, (err, info)=>{
+            //console.log(info);
             if (err) throw err; 
             let videoFormats = info.formats.map((value)=>{
+                console.log(FileSize.convertFileSize(value.filesize)); 
+
+
                 return {
                     format: value.format,
+                    formatId: value.format_id,
                     filesize: value.filesize,
                     ext: value.ext
                 }
             });
-            return videoFormats;
+            callback(videoFormats);
         })
     }
-    private download(formatCode, outputName){
+    public download(formatCode, outputName){
         var video = youtubedl(this.url, [`--format=${formatCode}`],{cwd: __dirname}); 
         video.pipe(fs.createWriteStream(outputName)); 
         video.on('end',()=>{
@@ -34,3 +40,4 @@ class Video{
         });
     }
 }
+
