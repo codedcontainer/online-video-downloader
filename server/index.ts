@@ -12,7 +12,6 @@ app.get('/', (req, res)=> {
 });
 app.post('/',(req, res)=>{
     const {vidUrl, subUrl, vidFormat, subBurn} = req.body; 
-    console.log(vidUrl);
     
     var video = new Video(vidUrl); 
     video.getFormats((formats)=>{
