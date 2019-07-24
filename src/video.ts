@@ -8,12 +8,12 @@ interface format{
     ext: string
 }
 
-class video{
+class Video{
     url:string;
     constructor(url){
         this.url = url; 
     }
-    private GetFormats(){
+    private getFormats(){
         youtubedl.getInfo(this.url, (err, info)=>{
             if (err) throw err; 
             let videoFormats = info.formats.map((value)=>{
