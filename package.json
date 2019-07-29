@@ -19,6 +19,10 @@
     "youtube-dl": "^2.0.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
     "mocha": "^6.1.4",
     "ts-node-dev": "^1.0.0-pre.40",
     "typescript": "^3.5.3",
