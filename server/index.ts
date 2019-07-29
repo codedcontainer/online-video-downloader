@@ -1,16 +1,21 @@
 import * as express from 'express'; 
 import {Video} from '../src/Video';
 import { format } from 'path';
+import bodyParser = require('body-parser');
 const app = express(); 
 const port = 3000; 
 
-app.use(express.static('client'));
-app.use(express.urlencoded()); 
+app.use(bodyParser.json()); 
+app.use(express.static('public'));
+app.use(express.urlencoded({extended: true})); 
 
 app.get('/', (req, res)=> {
     res.send("New server is working"); 
 });
-app.post('/',(req, res)=>{
+app.post('/video/formats',(req, res)=>{
+    //console.log(req.body);
+   // res.send(req.body);
+    //console.log('express / post');
     const {vidUrl, subUrl, vidFormat, subBurn} = req.body; 
     
     var video = new Video(vidUrl); 
