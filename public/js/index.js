@@ -25,7 +25,6 @@ var getFormats = function getFormats(e) {
   }).then(function (res) {
     return res.json();
   }).then(function (json) {
-    console.log(json);
     videoFormats = json;
     render();
   }, function (err) {
@@ -52,21 +51,7 @@ var formSubmit = function formSubmit(e) {
     };
     progressAmnt = 100;
     alert(msg);
-  }); // fetch('video/download', {
-  //     method: 'POST',
-  //     headers: {"Content-Type": "application/json"},
-  //     body: JSON.stringify({
-  //         vidUrl: e.target.vidUrl.value,
-  //         formatCode: e.target.vidFormat.value
-  //     }) }).then((res) => {
-  //         res.json();
-  //         ; 
-  //     }).then((json) => {
-  //         console.log(json); 
-  //         //render(); 
-  //     },(err)=>{
-  //         console.log(err);
-  //     });
+  });
 };
 
 var videoFormatFieldset = function videoFormatFieldset() {
@@ -95,19 +80,7 @@ var render = function render() {
     id: "vidUrl"
   }), React.createElement("button", {
     onClick: getFormats
-  }, "Get Available Formats")), videoFormatFieldset(), React.createElement("fieldset", null, React.createElement("label", {
-    htmlFor: "subUrl"
-  }, "Subtitle URL:"), React.createElement("input", {
-    type: "text",
-    name: "subUrl",
-    id: "subUrl"
-  })), React.createElement("fieldset", null, React.createElement("label", {
-    htmlFor: "subBrun"
-  }, "Burn Subtitles?"), React.createElement("input", {
-    type: "checkbox",
-    name: "subBurn",
-    id: "subBurn"
-  })), React.createElement("input", {
+  }, "Get Available Formats")), videoFormatFieldset(), React.createElement("input", {
     type: "submit",
     value: "Submit",
     id: "submit"

@@ -19,7 +19,6 @@ const getFormats = (e) => {
         body: JSON.stringify({ vidUrl: vidUrl })
     }).then((res) => res.json())
         .then((json) => {
-            console.log(json);
             videoFormats = json; 
             render(); 
         }, (err)=>{
@@ -43,21 +42,6 @@ const formSubmit = (e) => {
         progressAmnt = 100
         alert(msg);
     });
-    // fetch('video/download', {
-    //     method: 'POST',
-    //     headers: {"Content-Type": "application/json"},
-    //     body: JSON.stringify({
-    //         vidUrl: e.target.vidUrl.value,
-    //         formatCode: e.target.vidFormat.value
-    //     }) }).then((res) => {
-    //         res.json();
-    //         ; 
-    //     }).then((json) => {
-    //         console.log(json); 
-    //         //render(); 
-    //     },(err)=>{
-    //         console.log(err);
-    //     });
 };
 
 const videoFormatFieldset = () => {
@@ -72,8 +56,6 @@ const videoFormatFieldset = () => {
         )
     }
 }
-
-
 const render = () => {
 
 const template = (
@@ -85,17 +67,8 @@ const template = (
                 <button onClick={getFormats}>Get Available Formats</button>
             </fieldset>
             {videoFormatFieldset()}
-            <fieldset>
-                <label htmlFor="subUrl">Subtitle URL:</label>
-                <input type="text" name="subUrl" id="subUrl" />
-            </fieldset>
-              
-            <fieldset>
-                <label htmlFor="subBrun">Burn Subtitles?</label>
-                <input type="checkbox" name="subBurn" id="subBurn" />
-            </fieldset>
             <input type="submit" value="Submit" id="submit" />
-        </form>
+        </form> 
         <div className="w3-light-grey">
         <div className="w3-container w3-blue" style={progress}>{progressAmnt}%</div>
         </div>
