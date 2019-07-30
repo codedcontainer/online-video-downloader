@@ -16,7 +16,6 @@ export class Video{
     }
     public getFormats(callbacka){
         youtubedl.getInfo(this.url, (err, info)=>{
-            //console.log(info);
             if (err) throw err; 
             var vidFormats = []; 
             async.each(info.formats, (value:any, callback)=>{            
@@ -36,12 +35,50 @@ export class Video{
             });
 
     }
-    public download(formatCode, outputName){
+    public download(formatCode, outputName, callback){
         var video = youtubedl(this.url, [`--format=${formatCode}`],{cwd: __dirname}); 
         video.pipe(fs.createWriteStream(outputName)); 
+
+
+        let myInterval; 
+
+        video.on('info', (info)=>{
+           myInterval =  setInterval(()=>{
+               const stats = fs.statSync(outputName); 
+                const filesize = info.filesize; 
+                const decrease = filesize - stats.size; 
+               let percent = Math.floor( ( decrease / filesize) * 100);
+               percent = 100 - percent; 
+
+
+                callback(percent);
+
+            }, 500);
+            
+        })
+
+
+        // video.on('change', ()=>{
+        //     callback('change');
+        // });
+
+
+
+
         video.on('end',()=>{
-            console.log('video is done');
+            clearInterval(myInterval);
+            callback(null, "video is done"); 
         });
-    }
+;    }
 }
+
+// let video = new Video("https://www.youtube.com/watch?v=4w_cM9LgrHc"); 
+// video.download('249', 'sample.mp4', (percentage, done)=>{
+//     if (done){
+//         console.log(done); 
+//     }
+//     else {
+//         console.log(percentage);
+//     }
+// });
 

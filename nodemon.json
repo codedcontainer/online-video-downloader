@@ -1,0 +1,8 @@
+{
+    "watch": ["server", "src/index.js"],
+    "ext": "ts,js",
+    "execMap":{
+        "ts": "ts-node server/index.ts",
+        "js": "npx babel src/index.js --out-file public/js/index.js --presets @babel/preset-env,@babel/preset-react"
+    } 
+}

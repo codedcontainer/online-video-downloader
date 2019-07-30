@@ -10,7 +10,7 @@ export class FileSize{
     static convertFileSize(fileSize:number){
         //convert the number to a stirng and determine the number of characters
         //take the number of characters and subtract by 1 get number of 0's
-      if (fileSize !== undefined)
+      if (fileSize !== undefined && fileSize)
       {     
         const fileSizeStr = fileSize.toString();
         const numZeros = fileSizeStr.length - 1;
