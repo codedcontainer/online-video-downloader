@@ -28,7 +28,7 @@ app.post('/video/formats',(req, res)=>{
 app.post('/video/download', (req, res)=>{
     const {vidUrl,formatCode} = req.body; 
     var video = new Video(vidUrl);
-    video.download(formatCode, `sample.mp4`, (result)=>{
+    video.download(formatCode, `sample.mp4`, (progress,result)=>{
         res.send(result);
     }); 
 });
