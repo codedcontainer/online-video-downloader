@@ -1,21 +1,26 @@
 class VideoFormats extends React.Component {
     constructor(props) {
         super(props); 
-       this.vidUrl =  this.props.vidUrl
+        this.getformats = this.getformats.bind(this);
        this.state = {
            videoFormats: []
         }
     }
     getformats(e){
-        console.log('inside getFormats function');
+      
         e.preventDefault();
+        console.log('get formats button clicked');
         fetch('/video/formats', {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ vidUrl: this.vidUrl })
+            body: JSON.stringify({ vidUrl: this.props.vidUrl })
         }).then((res) => res.json())
             .then((json) => {
-                videoFormats = json;
+                this.setState(()=>{
+                    return{
+                        videoFormats: json
+                    }
+                })
                 render();
             }, (err) => {
                 console.log(err);
@@ -24,13 +29,15 @@ class VideoFormats extends React.Component {
     render() {
         return (
             <div>
-                <button type="button" onClick={this.getFormats} onChange={this.getformats}>Get Available Formats</button>
-                <fieldset>
-                    <label htmlFor="vidFormat">Video Format: </label>
-                    <select name="vidFormat">
+                <button type="button" className="ui button" onClick={this.getFormats}>Get Available Formats</button>
+                <div className="field">
+                    <div class="ui label">
+                    <label htmlFor="vidFormat">Video Format:</label>
+                    </div>
+                    <select name="vidFormat" className="ui fluid dropdown">
                         {this.state.videoFormats.map((format, index) => <option key={index} value={format.formatId}>{format.format} - {format.filesize}</option>)}
                     </select>
-                </fieldset>
+                </div>
                 </div>
         )
     }
@@ -42,16 +49,25 @@ class VideoFormats extends React.Component {
 class VideoDownload extends React.Component {
     constructor(props) {
         super(props); 
+        this.handleVidUrlChange = this.handleVidUrlChange.bind(this); 
         this.state = {
             vidUrl: 'https://www.youtube.com/watch?v=V-LvNk8g6vA',
             progress : { width: `0%` }, 
             progressAmnt: 0
         }; 
     }
+    handleVidUrlChange(event){
+        event.persist(); 
+        this.setState(()=>{
+            return { 
+                vidUrl: this.state.vidUrl
+            }
+        });
+    }
     formSubmit(e) {
         e.preventDefault();
         socket.emit('video-download', JSON.stringify({
-            vidUrl: e.target.vidUrl.value,
+            vidUrl: this.state.vidUrl,
             formatCode: e.target.vidFormat.value
         }));
         socket.on('video-progress', (msg) => {
@@ -68,14 +84,20 @@ class VideoDownload extends React.Component {
     render() {
         return (
             <div>
-                <form onSubmit={this.formSubmit}>
-                    <fieldset>
+                <form onSubmit={this.formSubmit} className="ui form">
+                    <div className="field">
+                        <div className="ui label">
                         <label htmlFor="vidUrl">Video URL:</label>
-                        <input type="text" name="vidUrl" id="vidUrl" defaultValue={this.state.vidUrl} />
+                        </div>
+                        <div className="ui input">
+                        <input type="text" name="vidUrl" id="vidUrl" defaultValue={this.state.vidUrl} onChange={this.handleVidUrlChange}/>
+                        </div>
                         
-                    </fieldset>
+                        </div>
                     <VideoFormats vidUrl={this.state.vidUrl}/>
-                    <input type="submit" value="Submit" id="submit" />
+                   
+                    <input type="submit" className="ui button" value="Submit" id="submit" />
+                  
                 </form>
                 <div className="w3-light-grey">
                     <div className="w3-container w3-blue" style={this.state.progress}>{this.state.progressAmnt}%</div>

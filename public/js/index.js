@@ -10,9 +10,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -29,7 +29,7 @@ function (_React$Component) {
     _classCallCheck(this, VideoFormats);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(VideoFormats).call(this, props));
-    _this.vidUrl = _this.props.vidUrl;
+    _this.getformats = _this.getformats.bind(_assertThisInitialized(_this));
     _this.state = {
       videoFormats: []
     };
@@ -39,20 +39,27 @@ function (_React$Component) {
   _createClass(VideoFormats, [{
     key: "getformats",
     value: function getformats(e) {
-      console.log('inside getFormats function');
+      var _this2 = this;
+
       e.preventDefault();
+      console.log('get formats button clicked');
       fetch('/video/formats', {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          vidUrl: this.vidUrl
+          vidUrl: this.props.vidUrl
         })
       }).then(function (res) {
         return res.json();
       }).then(function (json) {
-        videoFormats = json;
+        _this2.setState(function () {
+          return {
+            videoFormats: json
+          };
+        });
+
         render();
       }, function (err) {
         console.log(err);
@@ -63,12 +70,17 @@ function (_React$Component) {
     value: function render() {
       return React.createElement("div", null, React.createElement("button", {
         type: "button",
-        onClick: this.getFormats,
-        onChange: this.getformats
-      }, "Get Available Formats"), React.createElement("fieldset", null, React.createElement("label", {
+        className: "ui button",
+        onClick: this.getFormats
+      }, "Get Available Formats"), React.createElement("div", {
+        className: "field"
+      }, React.createElement("div", {
+        "class": "ui label"
+      }, React.createElement("label", {
         htmlFor: "vidFormat"
-      }, "Video Format: "), React.createElement("select", {
-        name: "vidFormat"
+      }, "Video Format:")), React.createElement("select", {
+        name: "vidFormat",
+        className: "ui fluid dropdown"
       }, this.state.videoFormats.map(function (format, index) {
         return React.createElement("option", {
           key: index,
@@ -87,27 +99,40 @@ function (_React$Component2) {
   _inherits(VideoDownload, _React$Component2);
 
   function VideoDownload(props) {
-    var _this2;
+    var _this3;
 
     _classCallCheck(this, VideoDownload);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(VideoDownload).call(this, props));
-    _this2.state = {
+    _this3 = _possibleConstructorReturn(this, _getPrototypeOf(VideoDownload).call(this, props));
+    _this3.handleVidUrlChange = _this3.handleVidUrlChange.bind(_assertThisInitialized(_this3));
+    _this3.state = {
       vidUrl: 'https://www.youtube.com/watch?v=V-LvNk8g6vA',
       progress: {
         width: "0%"
       },
       progressAmnt: 0
     };
-    return _this2;
+    return _this3;
   }
 
   _createClass(VideoDownload, [{
+    key: "handleVidUrlChange",
+    value: function handleVidUrlChange(event) {
+      var _this4 = this;
+
+      event.persist();
+      this.setState(function () {
+        return {
+          vidUrl: _this4.state.vidUrl
+        };
+      });
+    }
+  }, {
     key: "formSubmit",
     value: function formSubmit(e) {
       e.preventDefault();
       socket.emit('video-download', JSON.stringify({
-        vidUrl: e.target.vidUrl.value,
+        vidUrl: this.state.vidUrl,
         formatCode: e.target.vidFormat.value
       }));
       socket.on('video-progress', function (msg) {
@@ -129,18 +154,27 @@ function (_React$Component2) {
     key: "render",
     value: function render() {
       return React.createElement("div", null, React.createElement("form", {
-        onSubmit: this.formSubmit
-      }, React.createElement("fieldset", null, React.createElement("label", {
+        onSubmit: this.formSubmit,
+        className: "ui form"
+      }, React.createElement("div", {
+        className: "field"
+      }, React.createElement("div", {
+        className: "ui label"
+      }, React.createElement("label", {
         htmlFor: "vidUrl"
-      }, "Video URL:"), React.createElement("input", {
+      }, "Video URL:")), React.createElement("div", {
+        className: "ui input"
+      }, React.createElement("input", {
         type: "text",
         name: "vidUrl",
         id: "vidUrl",
-        defaultValue: this.state.vidUrl
-      })), React.createElement(VideoFormats, {
+        defaultValue: this.state.vidUrl,
+        onChange: this.handleVidUrlChange
+      }))), React.createElement(VideoFormats, {
         vidUrl: this.state.vidUrl
       }), React.createElement("input", {
         type: "submit",
+        className: "ui button",
         value: "Submit",
         id: "submit"
       })), React.createElement("div", {
