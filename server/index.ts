@@ -1,60 +1,53 @@
-import * as express from 'express'; 
-import {Video} from '../src/Video';
-import { format } from 'path';
+import * as express from 'express';
+import { Video } from '../src/Video';
 import bodyParser = require('body-parser');
+import { fileUpload } from '../src/fileUpload';
 const app = express();
-const http = require('http').createServer(app); 
-var io = require('socket.io')(http);  
-const port = 3000; 
+const http = require('http').createServer(app);
+var io = require('socket.io')(http);
+const port = 3000;
 
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 app.use(express.static('public'));
-app.use(express.urlencoded({extended: true})); 
+app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res)=> {
-    res.send("New server is working"); 
+app.get('/', (req, res) => {
+    res.send("New server is working");
 });
-app.post('/video/formats',(req, res)=>{
-    //console.log(req.body);
-   // res.send(req.body);
-    //console.log('express / post');
-    const {vidUrl, subUrl, vidFormat, subBurn} = req.body; 
-    
-    var video = new Video(vidUrl); 
-    video.getFormats((formats)=>{
+/* return url video download formats */ 
+app.post('/video/formats', (req, res) => {
+    const { vidUrl } = req.body;
+    new Video(vidUrl).getFormats().then((formats) => {
         res.send(formats);
+    }).catch((err) => {
+        res.send(err);
     });
 });
-app.post('/video/download', (req, res)=>{
-    const {vidUrl,formatCode} = req.body; 
-    var video = new Video(vidUrl);
-    video.download(formatCode, `sample.mp4`, (progress,result)=>{
-        res.send(result);
-    }); 
-});
-io.on('connection', function(socket){
-    socket.on('video-download', function(msg){
-        let json = JSON.parse(msg); 
-        const {vidUrl,formatCode} = json; 
-        var video = new Video(vidUrl);
-        video.download(formatCode, `sample.mp4`, (percentage,done)=>{
-            if (!done){
-                io.emit('video-progress', percentage); 
-            }
-            else{
-                io.emit('video-done', done);
-            }
-            
 
-       io.emit('video-download', "video is done");
-    }); 
+io.on('connection', function (socket) {
+    /* download a video */ 
+    socket.on('video-download', function (msg) {
+        let json = JSON.parse(msg);
+        const { vidUrl, formatCode } = json;
+        new Video(vidUrl).download(formatCode, `sample.mp4`).then((response) => {
+            if (response !== 0) {
+                io.emit('video-progress', response);
+            }
+            else {
+                io.emit('video-done', response);
+            }
+        });
     });
-    socket.on('video-format', (msg)=>{
-        //console.log(msg);
-    })
-    console.log('a user connected!');
+    /* upload a video */ 
+    socket.on('file-upload', (msg: File) => {
+        fileUpload.writeFile(msg).then((response) => {
+            io.emit('file-upload', response);
+        }).catch((err) => {
+            io.emit('file-upload', err);
+        });
+    });
 })
 
-http.listen(port, ()=>{
+http.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
 })
