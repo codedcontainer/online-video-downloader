@@ -1,8 +1,8 @@
 {
-    "watch": ["server", "src/index.js"],
+    "watch": ["server", "src/react/*.js"],
     "ext": "ts,js",
     "execMap":{
         "ts": "ts-node server/index.ts",
-        "js": "npx babel src/download.js --out-file public/js/index.js --presets @babel/preset-env,@babel/preset-react"
+        "js": "npx babel src/react/VideoFileUpload.js --out-file public/js/index.js --presets @babel/preset-env,@babel/preset-react"
     } 
 }
