@@ -10,7 +10,7 @@ const app = express();
 const http = require('http').createServer(app);
 var io = require('socket.io')(http);
 const port = 3000;
-const fileSaveDir = path.resolve('../', 'fileSave');
+const fileSaveDir = path.resolve(__dirname, '../', 'fileSave');
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -33,13 +33,11 @@ app.post('/video/upload', (req, res) => {
     let incomingForm = new formidable.IncomingForm();
     incomingForm.parse(req);
     incomingForm.on('fileBegin', (name, file) => {
-        file.path = fileSaveDir + file.name; 
-
-
-        // fs.writeFile(fileSaveDir, file, (err) => {
-        //     if (err) res.send(err);
-        //     res.send('File Uploaded');
-        // });
+        file.path = fileSaveDir+'/'+ file.name; 
+    });
+    incomingForm.on('file', (name, file)=>{
+        res.send('file uploaded'); 
+        console.log('Uploaded ' + file.name); 
     });
 });
 
