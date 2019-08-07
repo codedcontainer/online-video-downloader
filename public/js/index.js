@@ -10,18 +10,91 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var VideoFileUpload =
+var VideoConvertApp =
 /*#__PURE__*/
 function (_React$Component) {
-  _inherits(VideoFileUpload, _React$Component);
+  _inherits(VideoConvertApp, _React$Component);
+
+  function VideoConvertApp(props) {
+    var _this;
+
+    _classCallCheck(this, VideoConvertApp);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(VideoConvertApp).call(this, props));
+    _this.handleUploadChange = _this.handleUploadChange.bind(_assertThisInitialized(_this));
+    _this.state = {
+      formats: ['mp4', 'avi', 'mov', 'wmv', 'webm', 'mkv']
+    };
+    return _this;
+  }
+
+  _createClass(VideoConvertApp, [{
+    key: "handleUploadChange",
+    value: function handleUploadChange(e) {
+      var filePathName = e.target.value;
+      var fileBaseName = filePathName.replace(/^C:\\fakepath\\/g, "");
+      var ext = fileBaseName.match(/([.])\w+/g)[0].replace('.', '');
+      this.setState(function (prevState) {
+        return {
+          formats: prevState.formats.filter(function (format) {
+            return format !== ext;
+          })
+        };
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return React.createElement("div", null, React.createElement(VideoFileUpload, {
+        handleUploadChange: this.handleUploadChange,
+        formats: this.state.formats
+      }));
+    }
+  }]);
+
+  return VideoConvertApp;
+}(React.Component);
+
+var VideoEncoders =
+/*#__PURE__*/
+function (_React$Component2) {
+  _inherits(VideoEncoders, _React$Component2);
+
+  function VideoEncoders() {
+    _classCallCheck(this, VideoEncoders);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(VideoEncoders).apply(this, arguments));
+  }
+
+  _createClass(VideoEncoders, [{
+    key: "render",
+    value: function render() {
+      return React.createElement("select", {
+        name: "encodeFormat"
+      }, this.props.formats.map(function (format) {
+        return React.createElement("option", {
+          key: format,
+          value: format
+        }, format);
+      }));
+    }
+  }]);
+
+  return VideoEncoders;
+}(React.Component);
+
+var VideoFileUpload =
+/*#__PURE__*/
+function (_React$Component3) {
+  _inherits(VideoFileUpload, _React$Component3);
 
   function VideoFileUpload() {
     _classCallCheck(this, VideoFileUpload);
@@ -39,7 +112,10 @@ function (_React$Component) {
       }, React.createElement("input", {
         type: "file",
         name: "video",
-        accept: "video/mp4, video/ogg, video/avi, video/mov, video/wmv, video/webm, video/mkv, video/flv"
+        accept: "video/mp4, video/ogg, video/avi, video/mov, video/wmv, video/webm, video/mkv, video/flv",
+        onChange: this.props.handleUploadChange
+      }), React.createElement(VideoEncoders, {
+        formats: this.props.formats
       }), React.createElement("input", {
         type: "submit"
       }));
@@ -49,4 +125,4 @@ function (_React$Component) {
   return VideoFileUpload;
 }(React.Component);
 
-ReactDOM.render(React.createElement(VideoFileUpload, null), document.getElementById('app'));
+ReactDOM.render(React.createElement(VideoConvertApp, null), document.getElementById('app'));
