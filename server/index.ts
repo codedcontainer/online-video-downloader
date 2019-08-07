@@ -1,10 +1,11 @@
 import * as express from 'express';
 import { Video } from '../src/Video';
-import bodyParser = require('body-parser');
+import * as bodyParser from 'body-parser';
 import * as formidable from 'formidable';
 import { fileUpload } from '../src/fileUpload';
+import {VideoConvert} from '../src/fileConvert'; 
 import * as path from 'path';
-import * as fs from 'fs';
+
 
 const app = express();
 const http = require('http').createServer(app);
@@ -31,13 +32,23 @@ app.post('/video/formats', (req, res) => {
 
 app.post('/video/upload', (req, res) => {
     let incomingForm = new formidable.IncomingForm();
-    incomingForm.parse(req);
+    
+    let filePath, fileExt; 
+    incomingForm.parse(req, (err, fields, files)=>{
+        if (err) res.send('form could not be read'); 
+        fileExt = fields.encodeFormat; 
+        
+    });
     incomingForm.on('fileBegin', (name, file) => {
         file.path = fileSaveDir+'/'+ file.name; 
+        filePath = fileSaveDir+'/'+ file.name; 
     });
     incomingForm.on('file', (name, file)=>{
-        res.send('file uploaded'); 
-        console.log('Uploaded ' + file.name); 
+        new VideoConvert(filePath).convert(fileExt).then((success)=>{
+           res.send('file uploaded and converted')
+        }).catch((err)=>{
+            res.send('there was an error');
+        }) 
     });
 });
 
@@ -63,6 +74,15 @@ io.on('connection', function (socket) {
             io.emit('file-upload', err);
         });
     });
+    socket.on('file-convert', (msg)=>{
+        const json = JSON.parse(msg); 
+        const {vidPath, encoder} = json; 
+        new VideoConvert(vidPath).convert(encoder).then((success)=>{
+            socket.emit('file-convert', success); 
+        }).catch((err)=>{
+            socket.emit('file-convert', err);
+        })
+    })
 })
 
 http.listen(port, () => {

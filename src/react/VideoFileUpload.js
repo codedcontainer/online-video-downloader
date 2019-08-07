@@ -1,13 +1,24 @@
 
+
 class VideoConvertApp extends React.Component{
     constructor(props){
         super(props); 
 
         this.handleUploadChange = this.handleUploadChange.bind(this);
         this.state = {
-            formats: ['mp4', 'avi', 'mov', 'wmv', 'webm', 'mkv']
+            formats: ['mp4', 'avi', 'mov', 'wmv', 'webm', 'mkv'], 
+            videoPath: '',
+            videoExt: ''
         }
     }
+    // onSubmit(e){
+    //     e.preventDefault(); 
+    //     socket.emit('file-convert', JSON.stringify({
+    //         vidPath: e.target.video.value.replace(/^C:\\fakepath\\/g, ""),
+    //         vidExt: e.target.encodeFormat.value.match(/([.])\w+/g)[0].replace('.','')
+    //     })); 
+
+    // }
     handleUploadChange(e){
         const filePathName = e.target.value; 
         const fileBaseName = filePathName.replace(/^C:\\fakepath\\/g, "");  
@@ -24,7 +35,7 @@ class VideoConvertApp extends React.Component{
     render(){
         return (
             <div>
-                <VideoFileUpload handleUploadChange={this.handleUploadChange} formats={this.state.formats}/>
+                <VideoFileUpload handleUploadChange={this.handleUploadChange} formats={this.state.formats} submit={this.onSubmit}/>
             </div>
         )
     }

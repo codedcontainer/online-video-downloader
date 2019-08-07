@@ -31,10 +31,19 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(VideoConvertApp).call(this, props));
     _this.handleUploadChange = _this.handleUploadChange.bind(_assertThisInitialized(_this));
     _this.state = {
-      formats: ['mp4', 'avi', 'mov', 'wmv', 'webm', 'mkv']
+      formats: ['mp4', 'avi', 'mov', 'wmv', 'webm', 'mkv'],
+      videoPath: '',
+      videoExt: ''
     };
     return _this;
-  }
+  } // onSubmit(e){
+  //     e.preventDefault(); 
+  //     socket.emit('file-convert', JSON.stringify({
+  //         vidPath: e.target.video.value.replace(/^C:\\fakepath\\/g, ""),
+  //         vidExt: e.target.encodeFormat.value.match(/([.])\w+/g)[0].replace('.','')
+  //     })); 
+  // }
+
 
   _createClass(VideoConvertApp, [{
     key: "handleUploadChange",
@@ -55,7 +64,8 @@ function (_React$Component) {
     value: function render() {
       return React.createElement("div", null, React.createElement(VideoFileUpload, {
         handleUploadChange: this.handleUploadChange,
-        formats: this.state.formats
+        formats: this.state.formats,
+        submit: this.onSubmit
       }));
     }
   }]);
