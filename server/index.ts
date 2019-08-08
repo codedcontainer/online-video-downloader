@@ -5,6 +5,7 @@ import * as formidable from 'formidable';
 import { fileUpload } from '../src/fileUpload';
 import {VideoConvert} from '../src/fileConvert'; 
 import * as path from 'path';
+import * as fs from 'fs'; 
 
 
 const app = express();
@@ -36,20 +37,49 @@ app.post('/video/upload', (req, res) => {
     let filePath, fileExt; 
     incomingForm.parse(req, (err, fields, files)=>{
         if (err) res.send('form could not be read'); 
+        
         fileExt = fields.encodeFormat; 
         
     });
     incomingForm.on('fileBegin', (name, file) => {
-        file.path = fileSaveDir+'/'+ file.name; 
         filePath = fileSaveDir+'/'+ file.name; 
+        //console.log(path.resolve(fileSaveDir, file.name));
+        fs.exists(path.resolve(fileSaveDir, file.name), (exists)=>{
+            if (exists){
+                //see if the converted file exsists  
+                
+                console.log('file already exists');  
+            }else{
+                file.path = fileSaveDir+'/'+ file.name; 
+            console.log('file does not exist')
+            }
+          });
+        
+       
     });
-    incomingForm.on('file', (name, file)=>{
-        new VideoConvert(filePath).convert(fileExt).then((success)=>{
-           res.send('file uploaded and converted')
-        }).catch((err)=>{
-            res.send('there was an error');
-        }) 
+
+    incomingForm.on('end', (name, file)=>{
+
+        const convertFile = filePath.replace(filePath.match(/([.])\w+/g)[0], '.'+fileExt); 
+                fs.exists(convertFile, (exists)=>{
+                    if (exists){
+                        console.log('file already converted!');
+                        res.send('file already converted');
+                    }
+                    else{
+                        new VideoConvert(filePath).convert(fileExt).then((success)=>{
+                            console.log(success); 
+                            res.send('file converted')
+                         }).catch((err)=>{
+                             console.log(err);
+                             res.send('there was an error');
+                         });
+                    }
+                })
+
+       
     });
+    //res.send('done!');
 });
 
 io.on('connection', function (socket) {
@@ -82,7 +112,7 @@ io.on('connection', function (socket) {
         }).catch((err)=>{
             socket.emit('file-convert', err);
         })
-    })
+    });
 })
 
 http.listen(port, () => {

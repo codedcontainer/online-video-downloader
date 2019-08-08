@@ -24,8 +24,8 @@ export class VideoConvert{
     }
 }
 
-new VideoConvert('/Users/jasonutt/Documents/github/online-video-downloader/fileSave/The Police - Every Breath You Take (Official Music Video)-OMOGaugKpzs.mp4').convert('avi').then((done)=>{
-    console.log(done); 
-}).catch((err)=>{
-    console.log(err)
-});
+// new VideoConvert('/Users/jasonutt/Documents/github/online-video-downloader/fileSave/The Police - Every Breath You Take (Official Music Video)-OMOGaugKpzs.mp4').convert('avi').then((done)=>{
+//     console.log(done); 
+// }).catch((err)=>{
+//     console.log(err)
+// });

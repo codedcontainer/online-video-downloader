@@ -36,14 +36,7 @@ function (_React$Component) {
       videoExt: ''
     };
     return _this;
-  } // onSubmit(e){
-  //     e.preventDefault(); 
-  //     socket.emit('file-convert', JSON.stringify({
-  //         vidPath: e.target.video.value.replace(/^C:\\fakepath\\/g, ""),
-  //         vidExt: e.target.encodeFormat.value.match(/([.])\w+/g)[0].replace('.','')
-  //     })); 
-  // }
-
+  }
 
   _createClass(VideoConvertApp, [{
     key: "handleUploadChange",
@@ -62,7 +55,7 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      return React.createElement("div", null, React.createElement(VideoFileUpload, {
+      return React.createElement("div", null, React.createElement("h1", null, "Convert a Video"), React.createElement(VideoFileUpload, {
         handleUploadChange: this.handleUploadChange,
         formats: this.state.formats,
         submit: this.onSubmit
@@ -87,14 +80,15 @@ function (_React$Component2) {
   _createClass(VideoEncoders, [{
     key: "render",
     value: function render() {
-      return React.createElement("select", {
-        name: "encodeFormat"
+      return React.createElement("div", null, React.createElement("label", null, "Video Conversion Format: "), React.createElement("select", {
+        name: "encodeFormat",
+        className: "fluid dropdown"
       }, this.props.formats.map(function (format) {
         return React.createElement("option", {
           key: format,
           value: format
         }, format);
-      }));
+      })));
     }
   }]);
 
@@ -118,8 +112,9 @@ function (_React$Component3) {
       return React.createElement("form", {
         action: "/video/upload",
         encType: "multipart/form-data",
-        method: "post"
-      }, React.createElement("input", {
+        method: "post",
+        className: "ui form"
+      }, React.createElement("label", null, "Upload Video:"), React.createElement("input", {
         type: "file",
         name: "video",
         accept: "video/mp4, video/ogg, video/avi, video/mov, video/wmv, video/webm, video/mkv, video/flv",
@@ -127,7 +122,9 @@ function (_React$Component3) {
       }), React.createElement(VideoEncoders, {
         formats: this.props.formats
       }), React.createElement("input", {
-        type: "submit"
+        type: "submit",
+        className: "ui button",
+        value: "Convert"
       }));
     }
   }]);
