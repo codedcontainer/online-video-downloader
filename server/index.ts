@@ -34,31 +34,20 @@ app.post('/video/formats', (req, res) => {
 
 app.all('/video/uploaded/files', (req,res)=>{
     const searchQuery = req.query.s || req.query.search; 
-    const searchQueryArray = searchQuery.split(" "); 
-   
         const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave'))
    .then((data:any)=>{
        const filteredData =  new SearchFilter(req).filter(data,'name');
-
-        res.json([{searchQuery: searchQuery}, filteredData]);
-
-
-
-      res.status(200).json({data}); 
+      res.status(200).json({filteredData}); 
    }).catch((err)=>{
        res.status(400).json(err);
    }); 
-  // res.send('/video/files');
-   //res.send(JSON.stringify(files));
-    
-
-
    
 });
 app.post('/video/converted/files', (req, res)=>{
     const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave', 'converted'))
-    .then((data)=>{
-       res.status(200).json({data}); 
+    .then((data:any)=>{
+        const filteredData =  new SearchFilter(req).filter(data,'name');
+       res.status(200).json({filteredData}); 
     }).catch((err)=>{
         res.status(400).json(err);
     }); 
