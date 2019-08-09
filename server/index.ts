@@ -5,6 +5,7 @@ import * as formidable from 'formidable';
 import { fileUpload } from '../src/fileUpload';
 import { VideoConvert } from '../src/VideoConvert';
 import {FileCheck} from '../src/FileCheck'; 
+import {SearchFilter} from '../src/SearchFilter'; 
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -31,15 +32,28 @@ app.post('/video/formats', (req, res) => {
     });
 });
 
-app.post('/video/uploaded/files', (req,res)=>{
-   const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave'))
-   .then((data)=>{
+app.all('/video/uploaded/files', (req,res)=>{
+    const searchQuery = req.query.s || req.query.search; 
+    const searchQueryArray = searchQuery.split(" "); 
+   
+        const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave'))
+   .then((data:any)=>{
+       const filteredData =  new SearchFilter(req).filter(data,'name');
+
+        res.json([{searchQuery: searchQuery}, filteredData]);
+
+
+
       res.status(200).json({data}); 
    }).catch((err)=>{
        res.status(400).json(err);
    }); 
   // res.send('/video/files');
    //res.send(JSON.stringify(files));
+    
+
+
+   
 });
 app.post('/video/converted/files', (req, res)=>{
     const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave', 'converted'))
