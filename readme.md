@@ -22,7 +22,7 @@ If you decide to install these locally, you can use npx to run these from the no
 
 ## Startup / Run Locally Commands ##
 - `npm install`                 - Install package dependencies
-- `nodemon src/{download}.js`   - Watch react component files
+- `npx webpack`                 - Watch React Components (/src/components)
 - `nodemon server/index.ts`     - Watch Express server files 
 
 ## Watch I Have Learned ##
