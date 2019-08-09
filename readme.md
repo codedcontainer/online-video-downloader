@@ -27,6 +27,8 @@ If you decide to install these locally, you can use npx to run these from the no
 
 ## Watch I Have Learned ##
 1. socket.io - Watch for connections and send/receive messages from server and client
+2. Make sure that when you are configuring webpack with react that you declare your externals
+3. Use callbacks if you want a function to continually return a value. 
 
 ## Bookmarks ##
 -[formidable & Express](https://shiya.io/simple-file-upload-with-express-js-and-formidable-in-node-js/)

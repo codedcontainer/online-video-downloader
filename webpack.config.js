@@ -3,10 +3,14 @@ module.exports = {
 
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
-
+    output: {
+        path: __dirname + "/public/js", 
+    },
+    watch: true,
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: [".ts", ".tsx"]
+        
     },
 
     module: {
@@ -34,6 +38,7 @@ module.exports = {
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: {
+        "socket.io-client": "socket",
         "react": "React",
         "react-dom": "ReactDOM"
     }

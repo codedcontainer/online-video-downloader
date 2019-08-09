@@ -1,5 +1,4 @@
-import * as React from 'react'; 
-import * as ReactDOM from 'react-dom';  
+import * as React from 'react';  
 
 interface State{
     formats: Array<string>
@@ -11,7 +10,7 @@ interface Props{
     handleUploadChange?: (event: React.ChangeEvent<HTMLInputElement> ) => void
 }
 
-class VideoConvertApp extends React.Component<{}, State> {
+export class VideoConvertApp extends React.Component<{}, State> {
     constructor(props:Props) {
         super(props);
 
@@ -22,7 +21,7 @@ class VideoConvertApp extends React.Component<{}, State> {
             videoExt: ''
         }
     }
-    handleUploadChange(e:any) {
+    handleUploadChange(e) {
         const filePathName = e.target.value;
         const fileBaseName = filePathName.replace(/^C:\\fakepath\\/g, "");
         const ext = fileBaseName.match(/([.])\w+/g)[0].replace('.', '');
@@ -72,4 +71,3 @@ class VideoFileUpload extends React.Component<Props, State> {
     }
 }
 
-ReactDOM.render(<VideoConvertApp />, document.getElementById('app'));

@@ -1,7 +1,6 @@
-import io from 'socket.io-client'; 
+import socket from 'socket.io-client'; 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-const socket = io('https://localhost'); 
 
 interface State {
     vidUrl?: string,
@@ -19,10 +18,12 @@ interface Props{
     handleFormats?: (event: React.MouseEvent<HTMLButtonElement> ) => void
     formats?: Array<Formats>,
     vidUrl?: string
+    progress?: number,
+    active?: string
 }
 
 
-class VideoDownload extends React.Component<Props,State> {
+export class VideoDownload extends React.Component<Props,State> {
     constructor(props:any) {
         super(props);
         this.handleFormats = this.handleFormats.bind(this)
@@ -60,12 +61,32 @@ class VideoDownload extends React.Component<Props,State> {
     }
 
 
-    formSubmit(e:any) {
+    formSubmit(e) {
         e.preventDefault();
-        socket.emit('video-download', JSON.stringify({
-            vidUrl: this.state.vidUrl,
-            formatCode: e.target.vidFormat.value
-        }));
+        let io = socket.connect("localhost:3000");
+            io.emit('video-download', JSON.stringify({
+                vidUrl: this.state.vidUrl,
+                formatCode: e.target.vidFormat.value
+            }));
+            io.on('video-progress', (msg) => {
+             
+                    this.setState(() => {
+                        return {
+                            progress: msg,
+                            active: 'active'
+                        }
+                    })
+                
+            });
+            io.on('video-done', () => {
+                this.setState(()=>{
+                    return {
+                        progress: 100,
+                        active: 'success'
+                    }
+                })
+            });
+       
 
     }
     render() {
@@ -82,7 +103,7 @@ class VideoDownload extends React.Component<Props,State> {
                     <input type="submit" value="Submit" id="submit" className="ui button" />
                     </p>
                 </form>
-                <ProgressBar />
+                <ProgressBar progress={this.state.progress} active={this.state.active}/>
             </div>
         )
     }
@@ -108,34 +129,20 @@ class VideoFormats extends React.Component<Props, State> {
 }
 
 class ProgressBar extends React.Component<Props, State> {
+   
     constructor(props:any) {
         super(props);
         this.state = {
             progress: 0,
             active: ''
         }
-
-        socket.on('video-progress', (msg:number) => {
-            this.setState(() => {
-                return {
-                    progress: msg,
-                    active: 'active'
-                }
-            })
-        });
-        socket.on('video-done', () => {
-            return {
-                progress: 100,
-                active: 'success'
-            }
-        });
     }
     render() {
         return (
             <div>
-                <div className={`ui indicating progress ${this.state.active}`} data-percent={this.state.progress}>
-                    <div className="bar" style={{ "transitionDuration": 300 + 'ms', width: this.state.progress + '%' }}></div>
-                    <div className="label">{this.state.progress}% Complete</div>
+                <div className={`ui indicating progress ${this.props.active}`} data-percent={this.props.progress}>
+                    <div className="bar" style={{ "transitionDuration": 300 + 'ms', width: this.props.progress + '%' }}></div>
+                    <div className="label">{this.props.progress}% Complete</div>
                 </div>
             </div>
         )
