@@ -22,12 +22,14 @@ If you decide to install these locally, you can use npx to run these from the no
 
 ## Startup / Run Locally Commands ##
 - `npm install`                 - Install package dependencies
-- `nodemon src/{download}.js`   - Watch react component files
+- `npx webpack`                 - Watch React Components (/src/components)
 - `nodemon server/index.ts`     - Watch Express server files 
 
 ## Watch I Have Learned ##
 1. socket.io - Watch for connections and send/receive messages from server and client
 2. Create a tsconfig.json file and a visual studio launch.json file to handle debugging TS files.
+3. Make sure that when you are configuring webpack with react that you declare your externals
+4. Use callbacks if you want a function to continually return a value. 
 
 ## Bookmarks ##
 -[formidable & Express](https://shiya.io/simple-file-upload-with-express-js-and-formidable-in-node-js/)

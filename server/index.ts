@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express, { response } from 'express';
 import { Video } from '../src/Video';
 import * as bodyParser from 'body-parser';
 import * as formidable from 'formidable';
@@ -86,36 +86,37 @@ app.post('/video/upload', (req, res) => {
 });
 
 io.on('connection', function (socket) {
+    console.log('user connected');
     /* download a video */
     socket.on('video-download', function (msg) {
         let json = JSON.parse(msg);
         const { vidUrl, formatCode } = json;
-        new Video(vidUrl).download(formatCode, `sample.mp4`).then((response) => {
-            if (response !== 0) {
-                io.emit('video-progress', response);
+        new Video(vidUrl).download(formatCode, `sample.mp4`, (percent, done)=>{
+            if (percent !== 0) {
+                io.emit('video-progress', percent);
             }
-            else {
-                io.emit('video-done', response);
+            if(done) {
+                io.emit('video-done');
             }
         });
     });
     /* upload a video */
-    socket.on('file-upload', (msg: File) => {
-        fileUpload.writeFile(msg).then((response) => {
-            io.emit('file-upload', response);
-        }).catch((err) => {
-            io.emit('file-upload', err);
-        });
-    });
-    socket.on('file-convert', (msg) => {
-        const json = JSON.parse(msg);
-        const { vidPath, encoder } = json;
-        new VideoConvert(vidPath).convert(encoder).then((success) => {
-            socket.emit('file-convert', success);
-        }).catch((err) => {
-            socket.emit('file-convert', err);
-        })
-    });
+    // socket.on('file-upload', (msg: File) => {
+    //     fileUpload.writeFile(msg).then((response) => {
+    //         io.emit('file-upload', response);
+    //     }).catch((err) => {
+    //         io.emit('file-upload', err);
+    //     });
+    // });
+    // socket.on('file-convert', (msg) => {
+    //     const json = JSON.parse(msg);
+    //     const { vidPath, encoder } = json;
+    //     new VideoConvert(vidPath).convert(encoder).then((success) => {
+    //         socket.emit('file-convert', success);
+    //     }).catch((err) => {
+    //         socket.emit('file-convert', err);
+    //     })
+    // });
 })
 
 http.listen(port, () => {

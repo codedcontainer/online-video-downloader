@@ -1,7 +1,17 @@
+import * as React from 'react';  
 
+interface State{
+    formats: Array<string>
+    videoPath: string, 
+    videoExt: string
+}
+interface Props{
+    formats?: Array<string>
+    handleUploadChange?: (event: React.ChangeEvent<HTMLInputElement> ) => void
+}
 
-class VideoConvertApp extends React.Component {
-    constructor(props) {
+export class VideoConvertApp extends React.Component<{}, State> {
+    constructor(props:Props) {
         super(props);
 
         this.handleUploadChange = this.handleUploadChange.bind(this);
@@ -28,13 +38,13 @@ class VideoConvertApp extends React.Component {
         return (
             <div>
                 <h1>Convert a Video</h1>
-                <VideoFileUpload handleUploadChange={this.handleUploadChange} formats={this.state.formats} submit={this.onSubmit} />
+                <VideoFileUpload handleUploadChange={this.handleUploadChange} formats={this.state.formats} />
             </div>
         )
     }
 }
 
-class VideoEncoders extends React.Component {
+class VideoEncoders extends React.Component<Props, State> {
 
     render() {
         return (
@@ -48,7 +58,7 @@ class VideoEncoders extends React.Component {
     }
 }
 
-class VideoFileUpload extends React.Component {
+class VideoFileUpload extends React.Component<Props, State> {
     render() {
         return (
             <form action="/video/upload" encType="multipart/form-data" method="post" className="ui form">
@@ -61,4 +71,3 @@ class VideoFileUpload extends React.Component {
     }
 }
 
-ReactDOM.render(<VideoConvertApp />, document.getElementById('app'));
