@@ -1,9 +1,29 @@
-import socket from 'socket.io'; 
-import React from 'react'; 
-import ReactDOM from 'react-dom'; 
+import io from 'socket.io-client'; 
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+const socket = io('https://localhost'); 
 
-class VideoDownload extends React.Component {
-    constructor(props) {
+interface State {
+    vidUrl?: string,
+    formats?: Array<Formats>
+    progress?: number,
+    active?: string
+}
+
+interface Formats{
+    formatId?: string,  
+    format: string,
+    filesize?: string
+}
+interface Props{
+    handleFormats?: (event: React.MouseEvent<HTMLButtonElement> ) => void
+    formats?: Array<Formats>,
+    vidUrl?: string
+}
+
+
+class VideoDownload extends React.Component<Props,State> {
+    constructor(props:any) {
         super(props);
         this.handleFormats = this.handleFormats.bind(this)
         this.handleVidUrlChange = this.handleVidUrlChange.bind(this);
@@ -20,7 +40,7 @@ class VideoDownload extends React.Component {
             }
         });
     }
-    handleFormats(e) {
+    handleFormats(e:any) {
         e.preventDefault();
         fetch('/video/formats', {
             method: 'POST',
@@ -40,7 +60,7 @@ class VideoDownload extends React.Component {
     }
 
 
-    formSubmit(e) {
+    formSubmit(e:any) {
         e.preventDefault();
         socket.emit('video-download', JSON.stringify({
             vidUrl: this.state.vidUrl,
@@ -49,7 +69,7 @@ class VideoDownload extends React.Component {
 
     }
     render() {
-        return 
+        return (
             <div>
                 <h1>Download Video By URL</h1>
                 <form onSubmit={this.formSubmit} className="ui form">
@@ -64,11 +84,12 @@ class VideoDownload extends React.Component {
                 </form>
                 <ProgressBar />
             </div>
+        )
     }
 }
 
-class VideoFormats extends React.Component {
-    constructor(props) {
+class VideoFormats extends React.Component<Props, State> {
+    constructor(props:any) {
         super(props);
     }
     render() {
@@ -86,15 +107,15 @@ class VideoFormats extends React.Component {
     }
 }
 
-class ProgressBar extends React.Component {
-    constructor(props) {
+class ProgressBar extends React.Component<Props, State> {
+    constructor(props:any) {
         super(props);
         this.state = {
             progress: 0,
             active: ''
         }
 
-        socket.on('video-progress', (msg) => {
+        socket.on('video-progress', (msg:number) => {
             this.setState(() => {
                 return {
                     progress: msg,

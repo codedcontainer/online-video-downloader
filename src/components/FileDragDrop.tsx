@@ -1,9 +1,9 @@
-import React from 'react'; 
+import * as React from 'react'; 
 //import ReactDOM from 'react-dom'; 
 
 // eslint-disable-next-line no-unused-vars
 class FileDragDrop extends React.Component {
-    dropHandler(ev) {
+    dropHandler(ev:any) {
         console.log('File(s) dropped');
         // Prevent default behavior (Prevent file from being opened)
         ev.preventDefault();
@@ -24,13 +24,13 @@ class FileDragDrop extends React.Component {
             }
         }
     }
-    dragHandler(e){
+    dragHandler(e:any){
         e.preventDefault(); 
     }
 
     render() {
         return (
-            <div id="drop_zone" ondrop={this.dropHandler} ondragover={this.dragHandler}>
+            <div id="drop_zone" onDrop={this.dropHandler} onDragOver={this.dragHandler}>
                 <p>Drag one or more files to this Drop Zone ...</p>
             </div>
         )

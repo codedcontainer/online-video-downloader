@@ -1,8 +1,18 @@
-// const React = require('react'); 
-// const ReactDOM = require('react-dom'); 
+import * as React from 'react'; 
+import * as ReactDOM from 'react-dom';  
 
-class VideoConvertApp extends React.Component {
-    constructor(props) {
+interface State{
+    formats: Array<string>
+    videoPath: string, 
+    videoExt: string
+}
+interface Props{
+    formats?: Array<string>
+    handleUploadChange?: (event: React.ChangeEvent<HTMLInputElement> ) => void
+}
+
+class VideoConvertApp extends React.Component<{}, State> {
+    constructor(props:Props) {
         super(props);
 
         this.handleUploadChange = this.handleUploadChange.bind(this);
@@ -12,7 +22,7 @@ class VideoConvertApp extends React.Component {
             videoExt: ''
         }
     }
-    handleUploadChange(e) {
+    handleUploadChange(e:any) {
         const filePathName = e.target.value;
         const fileBaseName = filePathName.replace(/^C:\\fakepath\\/g, "");
         const ext = fileBaseName.match(/([.])\w+/g)[0].replace('.', '');
@@ -29,13 +39,13 @@ class VideoConvertApp extends React.Component {
         return (
             <div>
                 <h1>Convert a Video</h1>
-                <VideoFileUpload handleUploadChange={this.handleUploadChange} formats={this.state.formats} submit={this.onSubmit} />
+                <VideoFileUpload handleUploadChange={this.handleUploadChange} formats={this.state.formats} />
             </div>
         )
     }
 }
 
-class VideoEncoders extends React.Component {
+class VideoEncoders extends React.Component<Props, State> {
 
     render() {
         return (
@@ -49,7 +59,7 @@ class VideoEncoders extends React.Component {
     }
 }
 
-class VideoFileUpload extends React.Component {
+class VideoFileUpload extends React.Component<Props, State> {
     render() {
         return (
             <form action="/video/upload" encType="multipart/form-data" method="post" className="ui form">
