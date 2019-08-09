@@ -5,7 +5,7 @@ import * as formidable from 'formidable';
 import { fileUpload } from '../src/fileUpload';
 import { VideoConvert } from '../src/VideoConvert';
 import {FileCheck} from '../src/FileCheck'; 
-import {SearchFilter} from '../src/SearchFilter'; 
+import {Search} from '../src/Search'; 
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -33,11 +33,13 @@ app.post('/video/formats', (req, res) => {
 });
 
 app.all('/video/uploaded/files', (req,res)=>{
-    const searchQuery = req.query.s || req.query.search; 
-        const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave'))
+        new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave'))
    .then((data:any)=>{
-       const filteredData =  new SearchFilter(req).filter(data,'name');
-      res.status(200).json({filteredData}); 
+       new Search(req).sFilter(data,'name', (filteredData)=>{
+         res.status(200).json({filteredData}); 
+       });
+       //console.log(filteredData);
+     
    }).catch((err)=>{
        res.status(400).json(err);
    }); 
@@ -46,8 +48,10 @@ app.all('/video/uploaded/files', (req,res)=>{
 app.post('/video/converted/files', (req, res)=>{
     const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave', 'converted'))
     .then((data:any)=>{
-        const filteredData =  new SearchFilter(req).filter(data,'name');
-       res.status(200).json({filteredData}); 
+        new Search(req).sFilter(data,'name', (filteredData)=>{
+            res.status(200).json({filteredData}); 
+        });
+    
     }).catch((err)=>{
         res.status(400).json(err);
     }); 
