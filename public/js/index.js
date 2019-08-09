@@ -18,6 +18,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+// const React = require('react'); 
+// const ReactDOM = require('react-dom'); 
 var VideoConvertApp =
 /*#__PURE__*/
 function (_React$Component) {

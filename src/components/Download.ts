@@ -1,3 +1,7 @@
+import socket from 'socket.io'; 
+import React from 'react'; 
+import ReactDOM from 'react-dom'; 
+
 class VideoDownload extends React.Component {
     constructor(props) {
         super(props);
@@ -9,7 +13,7 @@ class VideoDownload extends React.Component {
             formats: [{ format: 'Select Get Availabe Formats' }]
         };
     }
-    handleVidUrlChange(event) {
+    handleVidUrlChange() {
         this.setState(() => {
             return {
                 vidUrl: this.state.vidUrl
@@ -45,7 +49,7 @@ class VideoDownload extends React.Component {
 
     }
     render() {
-        return (
+        return 
             <div>
                 <h1>Download Video By URL</h1>
                 <form onSubmit={this.formSubmit} className="ui form">
@@ -60,7 +64,6 @@ class VideoDownload extends React.Component {
                 </form>
                 <ProgressBar />
             </div>
-        )
     }
 }
 
@@ -99,7 +102,7 @@ class ProgressBar extends React.Component {
                 }
             })
         });
-        socket.on('video-done', (msg) => {
+        socket.on('video-done', () => {
             return {
                 progress: 100,
                 active: 'success'

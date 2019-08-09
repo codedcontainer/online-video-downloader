@@ -1,3 +1,7 @@
+import React from 'react'; 
+//import ReactDOM from 'react-dom'; 
+
+// eslint-disable-next-line no-unused-vars
 class FileDragDrop extends React.Component {
     dropHandler(ev) {
         console.log('File(s) dropped');
@@ -15,8 +19,8 @@ class FileDragDrop extends React.Component {
             }
         } else {
             // Use DataTransfer interface to access the file(s)
-            for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-                console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
+            for (var b = 0; b < ev.dataTransfer.files.length; b++) {
+                console.log('... file[' + b + '].name = ' + ev.dataTransfer.files[b].name);
             }
         }
     }
