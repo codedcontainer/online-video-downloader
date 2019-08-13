@@ -24,6 +24,7 @@ If you decide to install these locally, you can use npx to run these from the no
 - `npm install`                 - Install package dependencies
 - `npx webpack`                 - Watch React Components (/src/components)
 - `nodemon server/index.ts`     - Watch Express server files 
+- `redis-server /usr/local/etc/redis.conf`  - Run Redis on mac
 
 ## Watch I Have Learned ##
 1. socket.io - Watch for connections and send/receive messages from server and client

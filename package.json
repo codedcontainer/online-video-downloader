@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/videoConvert.js --timeout 10000000"
+    "test": "mocha test/bull.js"
   },
   "author": "Jason Utt",
   "license": "ISC",
   "dependencies": {
     "@types/async": "^3.0.1",
+    "@types/bull": "^3.10.2",
     "@types/express": "^4.17.0",
     "@types/formidable": "^1.0.31",
     "@types/socket.io": "^2.1.2",
