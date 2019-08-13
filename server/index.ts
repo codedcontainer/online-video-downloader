@@ -1,12 +1,13 @@
-import * as express from 'express';
+import express, { response } from 'express';
 import { Video } from '../src/Video';
 import * as bodyParser from 'body-parser';
 import * as formidable from 'formidable';
 import { fileUpload } from '../src/fileUpload';
-import {VideoConvert} from '../src/fileConvert'; 
+import { VideoConvert } from '../src/VideoConvert';
+import {FileCheck} from '../src/FileCheck'; 
+import {Search} from '../src/Search'; 
 import * as path from 'path';
-import * as fs from 'fs'; 
-
+import * as fs from 'fs';
 
 const app = express();
 const http = require('http').createServer(app);
@@ -31,88 +32,89 @@ app.post('/video/formats', (req, res) => {
     });
 });
 
+app.all('/video/uploaded/files', (req,res)=>{
+    new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave'), (data) => {
+        new Search(req).sFilter(data,'name', (filteredData)=>{
+            res.status(200).json({filteredData}); 
+          });
+    }); 
+   
+});
+app.all('/video/converted/files', (req, res)=>{
+    const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave', 'converted'), (data) =>{
+        new Search(req).sFilter(data,'name', (filteredData)=>{
+            res.status(200).json({filteredData}); 
+        });
+    }); 
+});
+
 app.post('/video/upload', (req, res) => {
     let incomingForm = new formidable.IncomingForm();
-    
-    let filePath, fileExt; 
-    incomingForm.parse(req, (err, fields, files)=>{
-        if (err) res.send('form could not be read'); 
-        
-        fileExt = fields.encodeFormat; 
-        
+
+    let filePath, fileExt;
+    incomingForm.parse(req, (err, fields, files) => {
+        if (err) res.send('form could not be read');
+        fileExt = fields.encodeFormat;
     });
     incomingForm.on('fileBegin', (name, file) => {
-        filePath = fileSaveDir+'/'+ file.name; 
-        //console.log(path.resolve(fileSaveDir, file.name));
-        fs.exists(path.resolve(fileSaveDir, file.name), (exists)=>{
-            if (exists){
-                //see if the converted file exsists  
-                
-                console.log('file already exists');  
-            }else{
-                file.path = fileSaveDir+'/'+ file.name; 
-            console.log('file does not exist')
+        filePath = path.resolve(fileSaveDir, file.name); 
+        file.path = filePath;
+        fs.exists(path.resolve(fileSaveDir, file.name), (exists) => {
+            if (exists) {
+                //see if the converted file exsists
+                console.log('file already exists');
+            } else {
+                console.log('file does not exist')
             }
-          });
-        
-       
+        });
+    });
+    incomingForm.on('file', (name,file)=>{
+        console.log('uploaded file');
     });
 
-    incomingForm.on('end', (name, file)=>{
-
-        const convertFile = filePath.replace(filePath.match(/([.])\w+/g)[0], '.'+fileExt); 
-                fs.exists(convertFile, (exists)=>{
-                    if (exists){
-                        console.log('file already converted!');
-                        res.send('file already converted');
-                    }
-                    else{
-                        new VideoConvert(filePath).convert(fileExt).then((success)=>{
-                            console.log(success); 
-                            res.send('file converted')
-                         }).catch((err)=>{
-                             console.log(err);
-                             res.send('there was an error');
-                         });
-                    }
-                })
-
-       
+    incomingForm.on('end', (name, file) => {
+        new VideoConvert(filePath).convert(fileExt).then((success) => {
+            console.log(success);
+            res.send('file converted')
+        }).catch((err) => {
+            console.log(err);
+            res.send('File already converted!');
+        });
     });
-    //res.send('done!');
 });
 
 io.on('connection', function (socket) {
+    console.log('user connected');
     /* download a video */
     socket.on('video-download', function (msg) {
         let json = JSON.parse(msg);
         const { vidUrl, formatCode } = json;
-        new Video(vidUrl).download(formatCode, `sample.mp4`).then((response) => {
-            if (response !== 0) {
-                io.emit('video-progress', response);
+        new Video(vidUrl).download(formatCode, `sample.mp4`, (percent, done)=>{
+            if (percent !== 0) {
+                io.emit('video-progress', percent);
             }
-            else {
-                io.emit('video-done', response);
+            if(done) {
+                io.emit('video-done');
             }
         });
     });
     /* upload a video */
-    socket.on('file-upload', (msg: File) => {
-        fileUpload.writeFile(msg).then((response) => {
-            io.emit('file-upload', response);
-        }).catch((err) => {
-            io.emit('file-upload', err);
-        });
-    });
-    socket.on('file-convert', (msg)=>{
-        const json = JSON.parse(msg); 
-        const {vidPath, encoder} = json; 
-        new VideoConvert(vidPath).convert(encoder).then((success)=>{
-            socket.emit('file-convert', success); 
-        }).catch((err)=>{
-            socket.emit('file-convert', err);
-        })
-    });
+    // socket.on('file-upload', (msg: File) => {
+    //     fileUpload.writeFile(msg).then((response) => {
+    //         io.emit('file-upload', response);
+    //     }).catch((err) => {
+    //         io.emit('file-upload', err);
+    //     });
+    // });
+    // socket.on('file-convert', (msg) => {
+    //     const json = JSON.parse(msg);
+    //     const { vidPath, encoder } = json;
+    //     new VideoConvert(vidPath).convert(encoder).then((success) => {
+    //         socket.emit('file-convert', success);
+    //     }).catch((err) => {
+    //         socket.emit('file-convert', err);
+    //     })
+    // });
 })
 
 http.listen(port, () => {

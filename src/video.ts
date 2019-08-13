@@ -6,8 +6,8 @@ import * as path from 'path';
 
 export class Video {
     url: string;
-    saveDir:string = path.resolve('../','fileSave'); 
-    constructor(url) {
+    saveDir:string = path.resolve('../','bin','fileSave'); 
+    constructor(url:string) {
         this.url = url;
     }
     public getFormats() {
@@ -32,26 +32,25 @@ export class Video {
             });
         });
     }
-    public download(formatCode, outputName) {
+    public download(formatCode, outputName, callback) {
         return new Promise((resolve, reject) => {
             let myInterval;
-            var video = youtubedl(this.url, [`--format=${formatCode}`], { cwd: this.saveDir });
-            video.pipe(fs.createWriteStream(outputName));
-
-            video.on('info', (err, info) => {
-                reject(err);
+            var video = youtubedl(this.url, [`--format=${formatCode}`], { cwd: __dirname });
+        
+            video.on('info', (info) => {
+                console.log(info.filesize); 
                 myInterval = setInterval(() => {
                     const stats = fs.statSync(outputName);
-                    const filesize = info.filesize;
-                    const decrease = filesize - stats.size;
-                    let percent = Math.floor((decrease / filesize) * 100);
+                    const decrease = info.filesize - stats.size;        
+                    let percent = Math.floor((decrease / info.filesize) * 100);
                     percent = 100 - percent;
-                    resolve(percent);
+                    callback(percent)
                 }, 250);
             });
+            video.pipe(fs.createWriteStream(outputName));
             video.on('end', () => {
                 clearInterval(myInterval);
-                resolve("video is done");
+                callback(null,'video is done'); 
             });
         });
 
@@ -59,12 +58,6 @@ export class Video {
 }
 
 // let video = new Video("https://www.youtube.com/watch?v=4w_cM9LgrHc"); 
-// video.download('249', 'sample.mp4', (percentage, done)=>{
-//     if (done){
-//         console.log(done); 
-//     }
-//     else {
-//         console.log(percentage);
-//     }
-// });
-
+// video.download('249', 'sample.mp4', (resolve)=>{
+//     console.log(resolve);
+// }); 
