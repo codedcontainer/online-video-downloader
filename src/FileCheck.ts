@@ -6,13 +6,11 @@ export class FileCheck{
             return exists; 
         })
     }
-    listAllFiles(saveDir:string){
-        return new Promise((resolve,reject)=>{
+    listAllFiles(saveDir:string, callback){
             fs.readdir(saveDir, {withFileTypes: true}, (err, items)=>{
-                if(err) reject(err); 
-                resolve(items.filter(item=>!item.isDirectory())); 
+                callback(items.filter(item=>!item.isDirectory())); 
             });
-        }); 
+  
        
     }
 

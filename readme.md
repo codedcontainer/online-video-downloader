@@ -30,6 +30,8 @@ If you decide to install these locally, you can use npx to run these from the no
 2. Create a tsconfig.json file and a visual studio launch.json file to handle debugging TS files.
 3. Make sure that when you are configuring webpack with react that you declare your externals
 4. Use callbacks if you want a function to continually return a value. 
+5. Don't put callback functions inside of promises as these promises can always return false and not run your callback function. 
+6. If you need to kill node.js on Windows and you cannot find the process in Task Manager use the following command: `taskkill /im node.exe /F`
 
 ## Bookmarks ##
 -[formidable & Express](https://shiya.io/simple-file-upload-with-express-js-and-formidable-in-node-js/)

@@ -33,29 +33,24 @@ app.post('/video/formats', (req, res) => {
 });
 
 app.all('/video/uploaded/files', (req,res)=>{
-        new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave'))
-   .then((data:any)=>{
-       new Search(req).sFilter(data,'name', (filteredData)=>{
-         res.status(200).json({filteredData}); 
-       });
-       //console.log(filteredData);
-     
-   }).catch((err)=>{
-       res.status(400).json(err);
-   }); 
-   
-});
-app.post('/video/converted/files', (req, res)=>{
-    const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave', 'converted'))
-    .then((data:any)=>{
+    new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave'), (data) => {
         new Search(req).sFilter(data,'name', (filteredData)=>{
             res.status(200).json({filteredData}); 
-        });
-    
-    }).catch((err)=>{
-        res.status(400).json(err);
+          });
     }); 
-})
+   
+});
+// app.post('/video/converted/files', (req, res)=>{
+//     const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave'), 'converted'))
+//     .then((data:any)=>{
+//         new Search(req).sFilter(data,'name', (filteredData)=>{
+//             res.status(200).json({filteredData}); 
+//         });
+    
+//     }).catch((err)=>{
+//         res.status(400).json(err);
+//     }); 
+// })
 
 app.post('/video/upload', (req, res) => {
     let incomingForm = new formidable.IncomingForm();
