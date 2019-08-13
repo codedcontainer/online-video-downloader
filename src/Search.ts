@@ -16,7 +16,7 @@ export class Search {
             this.filteredData = data.filter((item) => {
                 if (this.searchQueryArray.length > 0){
                     for (var a = 0; a <= this.searchQueryArray.length - 1; a++) {
-                        if (item[property].includes(this.searchQueryArray[a])) {
+                        if (item[property].includes(this.searchQueryArray[a]) {
                             return item;
                         }
                     }

@@ -40,17 +40,13 @@ app.all('/video/uploaded/files', (req,res)=>{
     }); 
    
 });
-// app.post('/video/converted/files', (req, res)=>{
-//     const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave'), 'converted'))
-//     .then((data:any)=>{
-//         new Search(req).sFilter(data,'name', (filteredData)=>{
-//             res.status(200).json({filteredData}); 
-//         });
-    
-//     }).catch((err)=>{
-//         res.status(400).json(err);
-//     }); 
-// })
+app.all('/video/converted/files', (req, res)=>{
+    const files =  new FileCheck().listAllFiles(path.resolve(__dirname, '../', 'fileSave', 'converted'), (data) =>{
+        new Search(req).sFilter(data,'name', (filteredData)=>{
+            res.status(200).json({filteredData}); 
+        });
+    }); 
+});
 
 app.post('/video/upload', (req, res) => {
     let incomingForm = new formidable.IncomingForm();
