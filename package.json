@@ -16,7 +16,7 @@
     "@types/socket.io": "^2.1.2",
     "@types/socket.io-client": "^1.4.32",
     "@types/youtube-dl": "^1.12.2",
-    "async": "^3.1.0",
+    "async": "^3.2.2",
     "bull": "^3.10.0",
     "express": "^4.17.1",
     "formidable": "^1.2.1",
