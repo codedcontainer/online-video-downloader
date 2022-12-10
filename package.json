@@ -18,7 +18,7 @@
     "@types/youtube-dl": "^1.12.2",
     "async": "^3.1.0",
     "bull": "^3.10.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "formidable": "^1.2.1",
     "http": "0.0.0",
     "https": "^1.0.0",
