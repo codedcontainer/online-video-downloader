@@ -37,7 +37,7 @@
     "@types/react-dom": "^16.8.5",
     "eslint": "^6.1.0",
     "eslint-plugin-react": "^7.14.3",
-    "mocha": "^6.1.4",
+    "mocha": "^10.2.0",
     "source-map-loader": "^0.2.4",
     "ts-loader": "^6.0.4",
     "ts-node-dev": "^1.0.0-pre.40",
